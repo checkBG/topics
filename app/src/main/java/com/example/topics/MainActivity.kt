@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -55,7 +57,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TopicApp(modifier: Modifier = Modifier) {
     val layoutDirection = LocalLayoutDirection.current
-    val coursesOfRow = Datasource.loadTopicsForRow()
+    val courses = Datasource.loadTopics()
 
     Surface(
         modifier = modifier
@@ -70,67 +72,27 @@ fun TopicApp(modifier: Modifier = Modifier) {
                     .calculateEndPadding(layoutDirection = layoutDirection)
             )
     ) {
-        TopicListOfRows(courses = coursesOfRow)
+        TopicListOfRows(courses = courses)
     }
 }
 
 @Composable
-fun TopicListOfRows(courses: List<List<Topic>>, modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier) {
-        items(items = courses) { courses ->
-            val firstCourse = courses.first()
-            val secondCourse = courses.last()
-
-            Row(modifier = modifier) {
-                TopicCard(
-                    course = firstCourse,
-                    modifier = modifier
-                        .fillMaxWidth(0.5F)
-                )
-
-                TopicCard(
-                    course = secondCourse,
-                    modifier = modifier
-                        .fillMaxWidth()
-                )
-            }
+fun TopicListOfRows(courses: List<Topic>, modifier: Modifier = Modifier) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(count = 2),
+        modifier = modifier.fillMaxSize()
+    ) {
+        items(items = courses) { course ->
+            TopicCard(course = course)
         }
     }
 }
-// @Composable
-//fun TopicApp(modifier: Modifier = Modifier) {
-//    val courses = Datasource.loadTopicsForRow()
-//
-//    LazyColumn(modifier = modifier) {
-//        items(items = courses) { twoCourses ->
-//            Row(modifier = modifier) {
-//                twoCourses.forEachIndexed { index, course ->
-//                    TopicCard(course = course)
-//                    when (index) {
-//                        0 -> TopicCard(
-//                            course = course,
-//                            modifier = modifier
-//                                .padding(start = 8.dp)
-//                                .fillMaxWidth(0.5F)
-//                        )
-//
-//                        else -> TopicCard(
-//                            course = course,
-//                            modifier = modifier
-//                                .padding(end = 8.dp)
-//                                .fillMaxWidth()
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
 
 @Composable
 fun TopicCard(course: Topic, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        modifier = modifier.padding(start = 8.dp, end = 8.dp, top = 3.dp, bottom = 3comm.dp)
     ) {
         Row(
             verticalAlignment = Alignment.Bottom,
